@@ -17,7 +17,7 @@ namespace PersistentSimpleActions
 		public override string Author { get { return _Author; } }
 
 		// SET THIS TO THE PWM VALUE YOU WANT TO COMMAND TO RELEASE PAYLOAD
-		private const int RELEASE_PWM_VALUE = 1100;
+		private const int RELEASE_PWM_VALUE = 1900;
 		private const int RELEASE_SERVO_NUM = 12;
 		// CHANGE THIS TO TRUE TO USE THIS PLUGIN
 		public override bool Init() { return false; }
