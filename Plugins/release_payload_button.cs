@@ -16,54 +16,69 @@ namespace PersistentSimpleActions
 		public override string Version { get { return _Version; } }
 		public override string Author { get { return _Author; } }
 
-		// SET THIS TO THE PWM VALUE YOU WANT TO COMMAND TO RELEASE PAYLOAD
-		private const int RELEASE_PWM_VALUE = 1900;
-		private const int RELEASE_SERVO_NUM = 12;
+        // SET THIS TO THE PWM VALUE YOU WANT TO COMMAND TO RELEASE PAYLOAD
+        private const int RELEASE_PWM_VALUE = 1100;
+        private const int GRAB_PWM_VALUE = 1900;
+        private const int RELEASE_SERVO_NUM = 12;
+		bool RELEASE_STATUS = false;
+
 		// CHANGE THIS TO TRUE TO USE THIS PLUGIN
-		public override bool Init() { return false; }
+		public override bool Init() { return true; }
 
 		public override bool Loaded()
 		{
-			MyButton but_release = new MyButton();
+			MyButton but_release1 = new MyButton();
 			ToolTip toolTip1 = new ToolTip();
 
-			// Rename these .Text fields to any valid mode and the code will automatically work
-			but_release.Text = "Release Payload";
-			but_release.Location = new System.Drawing.Point(4, 4);
-			but_release.Size = new System.Drawing.Size(75, 30);
-			toolTip1.SetToolTip(but_release, "Releases Payload, requires confirmation");
-			but_release.Click += new EventHandler(but_release_Click);
+			MyButton but_release2 = new MyButton();
+            ToolTip toolTip2 = new ToolTip();
 
-			// Increase the minimum size of the persistent panel. Not necessary, but adds a little
-			// more gap between the buttons and the tabs.
-			MainV2.instance.FlightData.panel_persistent.MinimumSize = new System.Drawing.Size(0, 40);
+            but_release1.Text = "릴리스 페이로드 \n (Release Payload)";
+			but_release1.Location = new System.Drawing.Point(4, 4);
+			but_release1.Size = new System.Drawing.Size(150, 30);
+			toolTip1.SetToolTip(but_release1, "Releases Payload, requires confirmation");
+			but_release1.Click += new EventHandler(but1_release_Click);
+
+            but_release2.Text = "페이로드 잡기 \n (Grab Payload)";
+            but_release2.Location = new System.Drawing.Point(170, 4);
+            but_release2.Size = new System.Drawing.Size(150, 30);
+            toolTip2.SetToolTip(but_release2, "Grabs Payload, requires confirmation");
+            but_release2.Click += new EventHandler(but2_release_Click);
+
+            // Increase the minimum size of the persistent panel. Not necessary, but adds a little
+            // more gap between the buttons and the tabs.
+            MainV2.instance.FlightData.panel_persistent.MinimumSize = new System.Drawing.Size(0, 40);
 
 			// Add the buttons
-			MainV2.instance.FlightData.panel_persistent.Controls.Add(but_release);
+			MainV2.instance.FlightData.panel_persistent.Controls.Add(but_release1);
+            MainV2.instance.FlightData.panel_persistent.Controls.Add(but_release2);
 
-			return true;
+            return true;
 		}
 
 		public override bool Exit() { return true; }
 
-		private void but_release_Click(object sender, EventArgs e)
+
+		private void but1_release_Click(object sender, EventArgs e)
 		{
 			var confirmResult = MessageBox.Show("페이로드를 해제하시겠습니까? Are you sure you want to release the payload??",
 								 "Confirm Release!!",
 								 MessageBoxButtons.YesNo);
 			if (confirmResult != DialogResult.Yes)
 			{
-				// do nothing
-				return;
-			}
+                // do nothing
+                return;
+            }
 			try
 			{
-				if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, RELEASE_PWM_VALUE, 0, 0,
+				
+                if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, RELEASE_PWM_VALUE, 0, 0,
 					0, 0, 0))
 				{
-					// Do nothing.
-					// TODO: change the button color or give some indication of success on the UI
-				}
+                    //RELEASE_STATUS = true;
+                    // Do nothing.
+                    // TODO: change the button color or give some indication of success on the UI
+                }
 				else
 				{
 					CustomMessageBox.Show(Strings.CommandFailed, Strings.ERROR);
@@ -75,5 +90,34 @@ namespace PersistentSimpleActions
 			}
 		}
 
-	}
+        private void but2_release_Click(object sender, EventArgs e)
+        {
+            var confirmResult = MessageBox.Show("페이로드를 가져오시겠습니까? Are you sure you want to grab the payload??",
+                                 "Confirm Release!!",
+                                 MessageBoxButtons.YesNo);
+            if (confirmResult != DialogResult.Yes)
+            {
+                // do nothing
+                return;
+            }
+            try
+            {
+                if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, GRAB_PWM_VALUE, 0, 0,
+                    0, 0, 0))
+                {
+                    //RELEASE_STATUS = false;
+                    // TODO: change the button color or give some indication of success on the UI
+                }
+                else
+                {
+                    CustomMessageBox.Show(Strings.CommandFailed, Strings.ERROR);
+                }
+            }
+            catch (Exception ex)
+            {
+                CustomMessageBox.Show(Strings.CommandFailed + ex.ToString(), Strings.ERROR);
+            }
+        }
+
+    }
 }
