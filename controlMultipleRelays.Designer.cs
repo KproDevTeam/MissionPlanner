@@ -28,10 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.leftOn = new MissionPlanner.Controls.MavlinkCheckBox();
-            this.leftOff = new MissionPlanner.Controls.MavlinkCheckBox();
-            this.rightOn = new MissionPlanner.Controls.MavlinkCheckBox();
-            this.rightOff = new MissionPlanner.Controls.MavlinkCheckBox();
             this.leftOne = new MissionPlanner.Controls.MyButton();
             this.leftTwo = new MissionPlanner.Controls.MyButton();
             this.leftThree = new MissionPlanner.Controls.MyButton();
@@ -45,72 +41,22 @@
             this.rightAll = new MissionPlanner.Controls.MyButton();
             this.leftAll = new MissionPlanner.Controls.MyButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.leftOff = new System.Windows.Forms.RadioButton();
+            this.leftOn = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.rightOff = new System.Windows.Forms.RadioButton();
+            this.rightOn = new System.Windows.Forms.RadioButton();
+            this.LeftOnOff = new System.Windows.Forms.GroupBox();
+            this.rightOnOff = new System.Windows.Forms.GroupBox();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.LeftOnOff.SuspendLayout();
+            this.rightOnOff.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // leftOn
-            // 
-            this.leftOn.AutoSize = true;
-            this.leftOn.Enabled = false;
-            this.leftOn.Location = new System.Drawing.Point(12, 26);
-            this.leftOn.Name = "leftOn";
-            this.leftOn.OffValue = 0D;
-            this.leftOn.OnValue = 1D;
-            this.leftOn.ParamName = null;
-            this.leftOn.Size = new System.Drawing.Size(40, 16);
-            this.leftOn.TabIndex = 0;
-            this.leftOn.Text = "On";
-            this.leftOn.UseVisualStyleBackColor = true;
-            this.leftOn.CheckedChanged += new System.EventHandler(this.leftOn_CheckedChanged);
-            // 
-            // leftOff
-            // 
-            this.leftOff.AutoSize = true;
-            this.leftOff.Enabled = false;
-            this.leftOff.Location = new System.Drawing.Point(12, 48);
-            this.leftOff.Name = "leftOff";
-            this.leftOff.OffValue = 0D;
-            this.leftOff.OnValue = 1D;
-            this.leftOff.ParamName = null;
-            this.leftOff.Size = new System.Drawing.Size(39, 16);
-            this.leftOff.TabIndex = 1;
-            this.leftOff.Text = "Off";
-            this.leftOff.UseVisualStyleBackColor = true;
-            this.leftOff.CheckedChanged += new System.EventHandler(this.leftOff_CheckedChanged);
-            // 
-            // rightOn
-            // 
-            this.rightOn.AutoSize = true;
-            this.rightOn.Enabled = false;
-            this.rightOn.Location = new System.Drawing.Point(192, 27);
-            this.rightOn.Name = "rightOn";
-            this.rightOn.OffValue = 0D;
-            this.rightOn.OnValue = 1D;
-            this.rightOn.ParamName = null;
-            this.rightOn.Size = new System.Drawing.Size(40, 16);
-            this.rightOn.TabIndex = 0;
-            this.rightOn.Text = "On";
-            this.rightOn.UseVisualStyleBackColor = true;
-            this.rightOn.CheckedChanged += new System.EventHandler(this.rightOn_CheckedChanged);
-            // 
-            // rightOff
-            // 
-            this.rightOff.AutoSize = true;
-            this.rightOff.Enabled = false;
-            this.rightOff.Location = new System.Drawing.Point(192, 49);
-            this.rightOff.Name = "rightOff";
-            this.rightOff.OffValue = 0D;
-            this.rightOff.OnValue = 1D;
-            this.rightOff.ParamName = null;
-            this.rightOff.Size = new System.Drawing.Size(39, 16);
-            this.rightOff.TabIndex = 1;
-            this.rightOff.Text = "Off";
-            this.rightOff.UseVisualStyleBackColor = true;
-            this.rightOff.CheckedChanged += new System.EventHandler(this.rightOff_CheckedChanged);
             // 
             // leftOne
             // 
-            this.leftOne.Location = new System.Drawing.Point(12, 82);
+            this.leftOne.Location = new System.Drawing.Point(13, 100);
             this.leftOne.Name = "leftOne";
             this.leftOne.Size = new System.Drawing.Size(75, 23);
             this.leftOne.TabIndex = 2;
@@ -121,7 +67,7 @@
             // 
             // leftTwo
             // 
-            this.leftTwo.Location = new System.Drawing.Point(93, 82);
+            this.leftTwo.Location = new System.Drawing.Point(94, 100);
             this.leftTwo.Name = "leftTwo";
             this.leftTwo.Size = new System.Drawing.Size(75, 23);
             this.leftTwo.TabIndex = 3;
@@ -132,7 +78,7 @@
             // 
             // leftThree
             // 
-            this.leftThree.Location = new System.Drawing.Point(12, 111);
+            this.leftThree.Location = new System.Drawing.Point(13, 129);
             this.leftThree.Name = "leftThree";
             this.leftThree.Size = new System.Drawing.Size(75, 23);
             this.leftThree.TabIndex = 4;
@@ -143,7 +89,7 @@
             // 
             // leftFour
             // 
-            this.leftFour.Location = new System.Drawing.Point(93, 111);
+            this.leftFour.Location = new System.Drawing.Point(94, 129);
             this.leftFour.Name = "leftFour";
             this.leftFour.Size = new System.Drawing.Size(75, 23);
             this.leftFour.TabIndex = 5;
@@ -154,7 +100,7 @@
             // 
             // leftFive
             // 
-            this.leftFive.Location = new System.Drawing.Point(55, 140);
+            this.leftFive.Location = new System.Drawing.Point(49, 157);
             this.leftFive.Name = "leftFive";
             this.leftFive.Size = new System.Drawing.Size(75, 23);
             this.leftFive.TabIndex = 6;
@@ -165,7 +111,7 @@
             // 
             // rightOne
             // 
-            this.rightOne.Location = new System.Drawing.Point(191, 83);
+            this.rightOne.Location = new System.Drawing.Point(13, 100);
             this.rightOne.Name = "rightOne";
             this.rightOne.Size = new System.Drawing.Size(75, 23);
             this.rightOne.TabIndex = 2;
@@ -176,7 +122,7 @@
             // 
             // rightTwo
             // 
-            this.rightTwo.Location = new System.Drawing.Point(272, 83);
+            this.rightTwo.Location = new System.Drawing.Point(94, 100);
             this.rightTwo.Name = "rightTwo";
             this.rightTwo.Size = new System.Drawing.Size(75, 23);
             this.rightTwo.TabIndex = 3;
@@ -187,7 +133,7 @@
             // 
             // rightThree
             // 
-            this.rightThree.Location = new System.Drawing.Point(191, 112);
+            this.rightThree.Location = new System.Drawing.Point(13, 129);
             this.rightThree.Name = "rightThree";
             this.rightThree.Size = new System.Drawing.Size(75, 23);
             this.rightThree.TabIndex = 4;
@@ -198,7 +144,7 @@
             // 
             // rightFour
             // 
-            this.rightFour.Location = new System.Drawing.Point(272, 112);
+            this.rightFour.Location = new System.Drawing.Point(94, 129);
             this.rightFour.Name = "rightFour";
             this.rightFour.Size = new System.Drawing.Size(75, 23);
             this.rightFour.TabIndex = 5;
@@ -209,7 +155,7 @@
             // 
             // rightFive
             // 
-            this.rightFive.Location = new System.Drawing.Point(234, 141);
+            this.rightFive.Location = new System.Drawing.Point(50, 158);
             this.rightFive.Name = "rightFive";
             this.rightFive.Size = new System.Drawing.Size(75, 23);
             this.rightFive.TabIndex = 6;
@@ -220,9 +166,9 @@
             // 
             // rightAll
             // 
-            this.rightAll.Location = new System.Drawing.Point(238, 27);
+            this.rightAll.Location = new System.Drawing.Point(60, 20);
             this.rightAll.Name = "rightAll";
-            this.rightAll.Size = new System.Drawing.Size(109, 38);
+            this.rightAll.Size = new System.Drawing.Size(109, 67);
             this.rightAll.TabIndex = 6;
             this.rightAll.Text = "모두 (All)";
             this.rightAll.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
@@ -231,9 +177,9 @@
             // 
             // leftAll
             // 
-            this.leftAll.Location = new System.Drawing.Point(59, 26);
+            this.leftAll.Location = new System.Drawing.Point(60, 20);
             this.leftAll.Name = "leftAll";
-            this.leftAll.Size = new System.Drawing.Size(109, 38);
+            this.leftAll.Size = new System.Drawing.Size(109, 67);
             this.leftAll.TabIndex = 6;
             this.leftAll.Text = "모두 (All)";
             this.leftAll.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
@@ -242,58 +188,125 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.leftAll);
+            this.groupBox1.Controls.Add(this.LeftOnOff);
+            this.groupBox1.Controls.Add(this.leftOne);
+            this.groupBox1.Controls.Add(this.leftTwo);
+            this.groupBox1.Controls.Add(this.leftThree);
+            this.groupBox1.Controls.Add(this.leftFour);
+            this.groupBox1.Controls.Add(this.leftFive);
             this.groupBox1.Location = new System.Drawing.Point(2, 8);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(175, 161);
+            this.groupBox1.Size = new System.Drawing.Size(175, 189);
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Left Set of Relays";
             // 
+            // leftOff
+            // 
+            this.leftOff.AutoSize = true;
+            this.leftOff.Location = new System.Drawing.Point(6, 42);
+            this.leftOff.Name = "leftOff";
+            this.leftOff.Size = new System.Drawing.Size(38, 16);
+            this.leftOff.TabIndex = 0;
+            this.leftOff.TabStop = true;
+            this.leftOff.Text = "Off";
+            this.leftOff.UseVisualStyleBackColor = true;
+            this.leftOff.CheckedChanged += new System.EventHandler(this.leftOff_CheckedChanged);
+            // 
+            // leftOn
+            // 
+            this.leftOn.AutoSize = true;
+            this.leftOn.Location = new System.Drawing.Point(6, 20);
+            this.leftOn.Name = "leftOn";
+            this.leftOn.Size = new System.Drawing.Size(39, 16);
+            this.leftOn.TabIndex = 0;
+            this.leftOn.TabStop = true;
+            this.leftOn.Text = "On";
+            this.leftOn.UseVisualStyleBackColor = true;
+            this.leftOn.CheckedChanged += new System.EventHandler(this.leftOn_CheckedChanged);
+            // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.rightOnOff);
+            this.groupBox2.Controls.Add(this.rightAll);
+            this.groupBox2.Controls.Add(this.rightOne);
+            this.groupBox2.Controls.Add(this.rightTwo);
+            this.groupBox2.Controls.Add(this.rightFive);
+            this.groupBox2.Controls.Add(this.rightThree);
+            this.groupBox2.Controls.Add(this.rightFour);
             this.groupBox2.Location = new System.Drawing.Point(183, 8);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(175, 161);
+            this.groupBox2.Size = new System.Drawing.Size(175, 189);
             this.groupBox2.TabIndex = 8;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Right Set of Relays";
             // 
-            // control_multiple_relay
+            // rightOff
+            // 
+            this.rightOff.AutoSize = true;
+            this.rightOff.Location = new System.Drawing.Point(6, 42);
+            this.rightOff.Name = "rightOff";
+            this.rightOff.Size = new System.Drawing.Size(38, 16);
+            this.rightOff.TabIndex = 0;
+            this.rightOff.TabStop = true;
+            this.rightOff.Text = "Off";
+            this.rightOff.UseVisualStyleBackColor = true;
+            this.rightOff.CheckedChanged += new System.EventHandler(this.rightOff_CheckedChanged);
+            // 
+            // rightOn
+            // 
+            this.rightOn.AutoSize = true;
+            this.rightOn.Location = new System.Drawing.Point(6, 20);
+            this.rightOn.Name = "rightOn";
+            this.rightOn.Size = new System.Drawing.Size(39, 16);
+            this.rightOn.TabIndex = 0;
+            this.rightOn.TabStop = true;
+            this.rightOn.Text = "On";
+            this.rightOn.UseVisualStyleBackColor = true;
+            this.rightOn.CheckedChanged += new System.EventHandler(this.rightOn_CheckedChanged);
+            // 
+            // LeftOnOff
+            // 
+            this.LeftOnOff.Controls.Add(this.leftOn);
+            this.LeftOnOff.Controls.Add(this.leftOff);
+            this.LeftOnOff.Location = new System.Drawing.Point(4, 20);
+            this.LeftOnOff.Name = "LeftOnOff";
+            this.LeftOnOff.Size = new System.Drawing.Size(50, 67);
+            this.LeftOnOff.TabIndex = 9;
+            this.LeftOnOff.TabStop = false;
+            // 
+            // rightOnOff
+            // 
+            this.rightOnOff.Controls.Add(this.rightOn);
+            this.rightOnOff.Controls.Add(this.rightOff);
+            this.rightOnOff.Location = new System.Drawing.Point(4, 19);
+            this.rightOnOff.Name = "rightOnOff";
+            this.rightOnOff.Size = new System.Drawing.Size(50, 68);
+            this.rightOnOff.TabIndex = 10;
+            this.rightOnOff.TabStop = false;
+            // 
+            // controlMultipleRelays
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(369, 174);
-            this.Controls.Add(this.leftAll);
-            this.Controls.Add(this.rightAll);
-            this.Controls.Add(this.rightFive);
-            this.Controls.Add(this.rightFour);
-            this.Controls.Add(this.leftFive);
-            this.Controls.Add(this.rightThree);
-            this.Controls.Add(this.leftFour);
-            this.Controls.Add(this.rightTwo);
-            this.Controls.Add(this.leftThree);
-            this.Controls.Add(this.rightOne);
-            this.Controls.Add(this.leftTwo);
-            this.Controls.Add(this.leftOne);
-            this.Controls.Add(this.rightOff);
-            this.Controls.Add(this.rightOn);
-            this.Controls.Add(this.leftOff);
-            this.Controls.Add(this.leftOn);
+            this.ClientSize = new System.Drawing.Size(368, 204);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
-            this.Name = "control_multiple_relay";
+            this.Name = "controlMultipleRelays";
             this.Text = "Control Multiple Relays";
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.LeftOnOff.ResumeLayout(false);
+            this.LeftOnOff.PerformLayout();
+            this.rightOnOff.ResumeLayout(false);
+            this.rightOnOff.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private Controls.MavlinkCheckBox leftOn;
-        private Controls.MavlinkCheckBox leftOff;
-        private Controls.MavlinkCheckBox rightOn;
-        private Controls.MavlinkCheckBox rightOff;
         private Controls.MyButton leftOne;
         private Controls.MyButton leftTwo;
         private Controls.MyButton leftThree;
@@ -308,5 +321,11 @@
         private Controls.MyButton leftAll;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.RadioButton leftOff;
+        private System.Windows.Forms.RadioButton leftOn;
+        private System.Windows.Forms.RadioButton rightOff;
+        private System.Windows.Forms.RadioButton rightOn;
+        private System.Windows.Forms.GroupBox LeftOnOff;
+        private System.Windows.Forms.GroupBox rightOnOff;
     }
 }
