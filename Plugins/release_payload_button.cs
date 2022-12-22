@@ -17,8 +17,8 @@ namespace PersistentSimpleActions
 		public override string Author { get { return _Author; } }
 
         // SET THIS TO THE PWM VALUE YOU WANT TO COMMAND TO RELEASE PAYLOAD
-        private const int RELEASE_PWM_VALUE = 1100;
-        private const int GRAB_PWM_VALUE = 1900;
+        private const int RELEASE_PWM_VALUE = 1900;
+        private const int GRAB_PWM_VALUE = 1100;
         private const int RELEASE_SERVO_NUM = 12;
 		bool RELEASE_STATUS = false;
 
@@ -33,13 +33,13 @@ namespace PersistentSimpleActions
 			MyButton but_release2 = new MyButton();
             ToolTip toolTip2 = new ToolTip();
 
-            but_release1.Text = "릴리스 페이로드 \n (Release Payload)";
+            but_release1.Text = "하물 투하 \n (Release Payload)";
 			but_release1.Location = new System.Drawing.Point(4, 4);
 			but_release1.Size = new System.Drawing.Size(150, 30);
 			toolTip1.SetToolTip(but_release1, "Releases Payload, requires confirmation");
 			but_release1.Click += new EventHandler(but1_release_Click);
 
-            but_release2.Text = "페이로드 잡기 \n (Grab Payload)";
+            but_release2.Text = "하물 고정 \n (Grab Payload)";
             but_release2.Location = new System.Drawing.Point(170, 4);
             but_release2.Size = new System.Drawing.Size(150, 30);
             toolTip2.SetToolTip(but_release2, "Grabs Payload, requires confirmation");
