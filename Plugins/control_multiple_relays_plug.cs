@@ -17,14 +17,14 @@ namespace PersistentSimpleActions
 		public override string Author { get { return _Author; } }
 
 		// CHANGE THIS TO TRUE TO USE THIS PLUGIN
-		public override bool Init() { return false; }
+		public override bool Init() { return true; }
 
 		public override bool Loaded()
 		{
 			MyButton but_release1 = new MyButton();
 			ToolTip toolTip1 = new ToolTip();
 
-            but_release1.Text = "릴레이 제어 \n (Control the relays)";
+            but_release1.Text = "DEFENCE KOREA \nRecoilless Water gun";
 			but_release1.Location = new System.Drawing.Point(4, 4);
 			but_release1.Size = new System.Drawing.Size(150, 30);
 			toolTip1.SetToolTip(but_release1, "Opens a new window with relay control buttons");

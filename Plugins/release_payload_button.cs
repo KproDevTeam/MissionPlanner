@@ -26,7 +26,7 @@ namespace PersistentSimpleActions
 		bool isReleased = false;
 
 		// CHANGE THIS TO TRUE TO USE THIS PLUGIN
-		public override bool Init() { return true; }
+		public override bool Init() { return false; }
 
 		public override bool Loaded()
 		{
