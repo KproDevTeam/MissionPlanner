@@ -14,22 +14,68 @@ namespace MissionPlanner
     public partial class controlMultipleRelays : Form
     {   
         bool isLeftOn = false; // failsafe lever switch
-        bool isLeft_1_Ready = true;
-        bool isLeft_2_Ready = true;
-        bool isLeft_3_Ready = true;
-        bool isLeft_4_Ready = true;
-        bool isLeft_5_Ready = true;
-        bool isLeft_All_Ready = true;
+        bool isLeft_1_Fired = false;
+        bool isLeft_2_Fired = false;
+        bool isLeft_3_Fired = false;
+        bool isLeft_4_Fired = false;
+        bool isLeft_5_Fired = false;
+        bool isLeft_All_Fired = false;
+        int cntLeftBullets = 5;
 
         bool isRightOn = false;// failsafe lever switch
+        bool isRight_1_Fired = false;
+        bool isRight_2_Fired = false;
+        bool isRight_3_Fired = false;
+        bool isRight_4_Fired = false;
+        bool isRight_5_Fired = false;
+        bool isRight_All_Fired = false;
+        int cntRightBullets = 5;
 
         private const int RELEASE_SERVO_NUM = 12;
         public controlMultipleRelays()
         {
             InitializeComponent();
+
+            this.ControlBox = false; // disable close button
+            /*
+            https://social.msdn.microsoft.com/Forums/en-US/b1f0d913-c603-43e9-8fe3-681fb7286d4c/c-disable-close-button-on-windows-form-application?forum=csharpgeneral
+            */
         }
 
-        //--------------------- Left Side ------------------------
+        void ReloadBullet()
+        {
+            //Thread.Sleep(1000);
+            MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1000, 0, 0,
+            0, 0, 0);
+        }
+
+        void checkBulletBalance()
+        {
+            if (0 == cntLeftBullets)
+            {
+                leftAll.Text = "All fired";
+                isLeft_All_Fired = true;
+            }
+            else if ( 5 == cntLeftBullets)
+            {
+                leftAll.Text = "Fire All at once";
+                isLeft_All_Fired = false;
+            }
+
+            if (0 == cntRightBullets)
+            {
+                rightAll.Text = "All fired";
+                isRight_All_Fired = true;
+            }
+            else if (5 == cntRightBullets)
+            {
+                rightAll.Text = "Fire All at once";
+                isRight_All_Fired = false;
+            }
+        }
+
+        // TODO: change the button color 
+        //--------------------- Left Side (push rock switch) ------------------------
         private void leftAll_Click(object sender, EventArgs e)
         {
             if ( isLeftOn ) // fail safe lever switch
@@ -39,51 +85,24 @@ namespace MissionPlanner
                     if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1100, 0, 0,
                         0, 0, 0))
                     {
-                        // TODO: change the button color or give some indication of success on the UI
+                        // TODO: change the button color
                         leftOne.Text = "fired";
-                        isLeft_1_Ready = false;
+                        isLeft_1_Fired = true;
 
                         leftTwo.Text = "fired";
-                        isLeft_2_Ready = false;
+                        isLeft_2_Fired = true;
 
                         leftThree.Text = "fired";
-                        isLeft_3_Ready = false;
+                        isLeft_3_Fired = true;
 
                         leftFour.Text = "fired";
-                        isLeft_4_Ready = false;
+                        isLeft_4_Fired = true;
 
                         leftFive.Text = "fired";
-                        isLeft_5_Ready = false;
+                        isLeft_5_Fired = true;
 
-                        leftAll.Text = "All fired";
-                        isLeft_All_Ready = false;
-
-                    /*
-                        // send a relay reset signal to FC->Arduino
-                        // or
-                        // do not send any signal . Arduino itself do the process: relay off
-                        Thread.Sleep(5000);
-                        MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1000, 0, 0,
-                        0, 0, 0);
-                        leftOne.Text = "1";
-                        isLeft_1_Ready = true;
-
-                        leftTwo.Text = "2";
-                        isLeft_2_Ready = true;
-
-                        leftThree.Text = "3";
-                        isLeft_3_Ready = true;
-
-                        leftFour.Text = "4";
-                        isLeft_4_Ready = true;
-
-                        leftFive.Text = "5";
-                        isLeft_5_Ready = true;
-
-                        leftAll.Text = "All at once";
-                        isLeft_All_Ready = true;
-                    */
-
+                        cntLeftBullets = 0;
+                        checkBulletBalance();
                     }
                     else
                     {
@@ -99,16 +118,32 @@ namespace MissionPlanner
 
         private void leftOne_Click(object sender, EventArgs e)
         {
-            if ( isLeftOn ) // fail safe lever switch
+            if (isLeft_1_Fired) // reload manually
+            {
+                // color chnage to green
+               //leftOne.BackColor = Color.DarkGreen;
+                leftOne.Text = "1";
+                isLeft_1_Fired = false;
+                cntLeftBullets++;
+                checkBulletBalance();
+                return;
+            }
+
+            if ( !isLeft_1_Fired && isLeftOn ) // fire
             {
                 try
                 {
                     if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1175, 0, 0,
                         0, 0, 0))
                     {
-                        // TODO: change the button color or give some indication of success on the UI
+                        // TODO: change the button color to Gray or red
                         leftOne.Text = "fired";
-                        isLeft_1_Ready = false;
+                        leftOne.UseVisualStyleBackColor = false;
+                        leftOne.BackColor = Color.Red;
+                        
+                        isLeft_1_Fired = true;
+                        cntLeftBullets--;
+                        checkBulletBalance();
                     }
                     else
                     {
@@ -124,17 +159,28 @@ namespace MissionPlanner
 
         private void leftTwo_Click(object sender, EventArgs e)
         {
-            if ( isLeftOn )// fail safe lever switch
+            if (isLeft_2_Fired) // reload manually
+            {
+                leftTwo.Text = "2";
+                isLeft_2_Fired = false;
+                cntLeftBullets++;
+                checkBulletBalance();
+                // color chnage to green
+                return;
+            }
+
+            if ( !isLeft_2_Fired && isLeftOn)// Fire
             {
                 try
                 {
-
                     if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1250, 0, 0,
                         0, 0, 0))
                     {
-                        // TODO: change the button color or give some indication of success on the UI
+                        // TODO: change the button color 
                         leftTwo.Text = "fired";
-                        isLeft_2_Ready = false;
+                        isLeft_2_Fired = true;
+                        cntLeftBullets--;
+                        checkBulletBalance();
                     }
                     else
                     {
@@ -150,7 +196,17 @@ namespace MissionPlanner
 
         private void leftThree_Click(object sender, EventArgs e)
         {
-            if ( isLeftOn )// fail safe lever switch
+            if (isLeft_3_Fired) // reload manually
+            {
+                leftThree.Text = "3";
+                isLeft_3_Fired = false;
+                cntLeftBullets++;
+                checkBulletBalance();
+                // color chnage to green
+                return;
+            }
+
+            if ( !isLeft_3_Fired && isLeftOn)// Fire
             {
                 try
                 {
@@ -158,7 +214,9 @@ namespace MissionPlanner
                         0, 0, 0))
                     {
                         leftThree.Text = "fired";
-                        isLeft_3_Ready = false;
+                        isLeft_3_Fired = true;
+                        cntLeftBullets--;
+                        checkBulletBalance();
                     }
                     else
                     {
@@ -174,16 +232,27 @@ namespace MissionPlanner
 
         private void leftFour_Click(object sender, EventArgs e)
         {
-            if ( isLeftOn ) // fail safe lever switch
+            if (isLeft_4_Fired) // reload manually
+            {
+                leftFour.Text = "4";
+                isLeft_4_Fired = false;
+                cntLeftBullets++;
+                checkBulletBalance();
+                // color chnage to green
+                return;
+            }
+
+            if ( !isLeft_4_Fired && isLeftOn) // Fire
             {
                 try
                 {
-
                     if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1400, 0, 0,
                         0, 0, 0))
                     {
                         leftFour.Text = "fired";
-                        isLeft_4_Ready = false;
+                        isLeft_4_Fired = true;
+                        cntLeftBullets--;
+                        checkBulletBalance();
                     }
                     else
                     {
@@ -199,16 +268,27 @@ namespace MissionPlanner
 
         private void leftFive_Click(object sender, EventArgs e)
         {
-            if (isLeftOn == true)
+            if (isLeft_5_Fired) // reload manually
+            {
+                leftFive.Text = "5";
+                isLeft_5_Fired = false;
+                cntLeftBullets++;
+                checkBulletBalance();
+                // color chnage to green
+                return;
+            }
+
+            if ( !isLeft_5_Fired && isLeftOn == true) // Fire
             {
                 try
                 {
-
                     if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1475, 0, 0,
                         0, 0, 0))
                     {
                         leftFive.Text = "fired";
-                        isLeft_5_Ready = false;
+                        isLeft_5_Fired = true;
+                        cntLeftBullets--;
+                        checkBulletBalance();
                     }
                     else
                     {
@@ -229,18 +309,28 @@ namespace MissionPlanner
             {
                 try
                 {
-
                     if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1550, 0, 0,
                         0, 0, 0))
                     {
-                        //RELEASE_STATUS = true;
-                        // Do nothing.
-                        // TODO: change the button color or give some indication of success on the UI
 
+                        // TODO: change the button color
+                        rightOne.Text = "fired";
+                        isRight_1_Fired = true;
 
-                        Thread.Sleep(1000);
-                        MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1000, 0, 0,
-                        0, 0, 0);
+                        rightTwo.Text = "fired";
+                        isRight_2_Fired = true;
+
+                        rightThree.Text = "fired";
+                        isRight_3_Fired = true;
+
+                        rightFour.Text = "fired";
+                        isRight_4_Fired = true;
+
+                        rightFive.Text = "fired";
+                        isRight_5_Fired = true;
+
+                        cntRightBullets = 0;
+                        checkBulletBalance();
                     }
                     else
                     {
@@ -256,17 +346,27 @@ namespace MissionPlanner
 
         private void rightOne_Click(object sender, EventArgs e)
         {
-            if ( isRightOn ) // fail safe lever switch
+            if (isRight_1_Fired) // reload manually
+            {
+                rightOne.Text = "1";
+                isRight_1_Fired = false;
+                cntRightBullets++;
+                checkBulletBalance();
+                // color chnage to green
+                return;
+            }
+
+            if ( !isRight_1_Fired && isRightOn) // Fire
             {
                 try
                 {
-
                     if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1625, 0, 0,
                         0, 0, 0))
                     {
-                        //RELEASE_STATUS = true;
-                        // Do nothing.
-                        // TODO: change the button color or give some indication of success on the UI
+                        rightOne.Text = "fired";
+                        isRight_1_Fired = true;
+                        cntRightBullets--;
+                        checkBulletBalance();
                     }
                     else
                     {
@@ -282,17 +382,27 @@ namespace MissionPlanner
 
         private void rightTwo_Click(object sender, EventArgs e)
         {
-            if ( isRightOn) // fail safe lever switch
+            if (isRight_2_Fired) // reload manually
+            {
+                rightTwo.Text = "2";
+                isRight_2_Fired = false;
+                cntRightBullets++;
+                checkBulletBalance();
+                // color chnage to green
+                return;
+            }
+
+            if ( !isRight_2_Fired && isRightOn) // fail safe lever switch
             {
                 try
                 {
-
                     if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1700, 0, 0,
                         0, 0, 0))
                     {
-                        //RELEASE_STATUS = true;
-                        // Do nothing.
-                        // TODO: change the button color or give some indication of success on the UI
+                        rightTwo.Text = "fired";
+                        isRight_2_Fired = true;
+                        cntRightBullets--;
+                        checkBulletBalance();
                     }
                     else
                     {
@@ -308,17 +418,27 @@ namespace MissionPlanner
 
         private void rightThree_Click(object sender, EventArgs e)
         {
-            if ( isRightOn) // fail safe lever switch
+            if (isRight_3_Fired) // reload manually
+            {
+                rightThree.Text = "3";
+                isRight_3_Fired = false;
+                cntRightBullets++;
+                checkBulletBalance();
+                // color chnage to green
+                return;
+            }
+
+            if ( !isRight_3_Fired && isRightOn) // Fire
             {
                 try
                 {
-
                     if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1775, 0, 0,
                         0, 0, 0))
                     {
-                        //RELEASE_STATUS = true;
-                        // Do nothing.
-                        // TODO: change the button color or give some indication of success on the UI
+                        rightThree.Text = "fired";
+                        isRight_3_Fired = true;
+                        cntRightBullets--;
+                        checkBulletBalance();
                     }
                     else
                     {
@@ -334,17 +454,26 @@ namespace MissionPlanner
 
         private void rightFour_Click(object sender, EventArgs e)
         {
-            if (isRightOn) // fail safe lever switch
+            if (isRight_4_Fired) // reload manually
+            {
+                rightFour.Text = "4";
+                isRight_4_Fired = false;
+                cntRightBullets++;
+                checkBulletBalance();
+                // color chnage to green
+                return;
+            }
+            if (!isRight_4_Fired && isRightOn) // fail safe lever switch
             {
                 try
                 {
-
                     if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1850, 0, 0,
                         0, 0, 0))
                     {
-                        //RELEASE_STATUS = true;
-                        // Do nothing.
-                        // TODO: change the button color or give some indication of success on the UI
+                        rightFour.Text = "fired";
+                        isRight_4_Fired = true;
+                        cntRightBullets--;
+                        checkBulletBalance();
                     }
                     else
                     {
@@ -360,17 +489,27 @@ namespace MissionPlanner
 
         private void rightFive_Click(object sender, EventArgs e)
         {
-            if (isRightOn)// fail safe lever switch
+            if (isRight_5_Fired) // reload manually
+            {
+                rightFive.Text = "5";
+                isRight_5_Fired = false;
+                cntRightBullets++;
+                checkBulletBalance();
+                // color chnage to green
+                return;
+            }
+
+            if (!isRight_5_Fired && isRightOn)// fail safe lever switch
             {
                 try
                 {
-
                     if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1925, 0, 0,
                         0, 0, 0))
                     {
-                        //RELEASE_STATUS = true;
-                        // Do nothing.
-                        // TODO: change the button color or give some indication of success on the UI
+                        rightFive.Text = "fired";
+                        isRight_5_Fired = true;
+                        cntRightBullets--;
+                        checkBulletBalance();
                     }
                     else
                     {
@@ -397,12 +536,22 @@ namespace MissionPlanner
 
         private void leftOff_CheckedChanged(object sender, EventArgs e)
         {
-            isLeftOn= false;
+            if (isLeftOn)
+            {
+                isLeftOn = false;
+                ReloadBullet();
+            }
+            
         }
 
         private void rightOff_CheckedChanged(object sender, EventArgs e)
         {
-            isRightOn= false;
+            if (isRightOn)
+            {
+                isRightOn = false;
+                ReloadBullet();
+            }
+            
         }
     }
 }
