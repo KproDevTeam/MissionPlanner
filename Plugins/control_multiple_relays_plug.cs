@@ -12,7 +12,11 @@ namespace PersistentSimpleActions
 		private string _Version = "0.1";
 		private string _Author = "Ranjai Baidya";
 
-		public override string Name { get { return _Name; } }
+		private controlMultipleRelays objSecondWindow;
+		private bool isSecondWindowHide = true;
+
+
+        public override string Name { get { return _Name; } }
 		public override string Version { get { return _Version; } }
 		public override string Author { get { return _Author; } }
 
@@ -36,6 +40,9 @@ namespace PersistentSimpleActions
 
 			// Add the buttons
 			MainV2.instance.FlightData.panel_persistent.Controls.Add(but_release1);
+
+            objSecondWindow = new controlMultipleRelays();
+
             return true;
 		}
 
@@ -43,10 +50,19 @@ namespace PersistentSimpleActions
 
 		private void but1_release_Click(object sender, EventArgs e)
 		{
-			controlMultipleRelays objSecondWindow = new controlMultipleRelays();
-			objSecondWindow.Show();
-			
-		}
+			//	controlMultipleRelays objSecondWindow = new controlMultipleRelays();
+			if ( isSecondWindowHide )
+			{
+				objSecondWindow.Show();
+				isSecondWindowHide = false;
+			}
+			else
+			{
+                objSecondWindow.Hide();
+                isSecondWindowHide = true;
+            }
+
+        }
 
     }
 }
