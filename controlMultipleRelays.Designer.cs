@@ -63,7 +63,7 @@
             this.groupBox1.Controls.Add(this.leftTwo);
             this.groupBox1.Controls.Add(this.leftThree);
             this.groupBox1.Controls.Add(this.leftFour);
-            this.groupBox1.Location = new System.Drawing.Point(18, 23);
+            this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(685, 300);
             this.groupBox1.TabIndex = 7;
@@ -106,6 +106,7 @@
             // 
             // leftOff
             // 
+            this.leftOff.Checked = true;
             this.leftOff.Font = new System.Drawing.Font("Gulim", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.leftOff.Location = new System.Drawing.Point(70, 67);
             this.leftOff.Name = "leftOff";
@@ -114,7 +115,6 @@
             this.leftOff.TabStop = true;
             this.leftOff.Text = "Off";
             this.leftOff.UseVisualStyleBackColor = true;
-            this.leftOff.Checked = true;
             this.leftOff.CheckedChanged += new System.EventHandler(this.leftOff_CheckedChanged);
             // 
             // leftOne
@@ -186,7 +186,7 @@
             this.groupBox2.Controls.Add(this.rightFive);
             this.groupBox2.Controls.Add(this.rightThree);
             this.groupBox2.Controls.Add(this.rightFour);
-            this.groupBox2.Location = new System.Drawing.Point(723, 23);
+            this.groupBox2.Location = new System.Drawing.Point(703, 12);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(678, 300);
             this.groupBox2.TabIndex = 8;
@@ -201,7 +201,6 @@
             this.rightOnOff.Name = "rightOnOff";
             this.rightOnOff.Size = new System.Drawing.Size(170, 121);
             this.rightOnOff.TabIndex = 10;
-            this.rightOff.Checked = true;
             this.rightOnOff.TabStop = false;
             // 
             // rightOn
@@ -218,6 +217,7 @@
             // 
             // rightOff
             // 
+            this.rightOff.Checked = true;
             this.rightOff.Font = new System.Drawing.Font("Gulim", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.rightOff.Location = new System.Drawing.Point(63, 67);
             this.rightOff.Name = "rightOff";
@@ -304,7 +304,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1413, 335);
+            this.ClientSize = new System.Drawing.Size(1387, 328);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
             this.Name = "controlMultipleRelays";
