@@ -42,11 +42,14 @@ namespace MissionPlanner
             */
         }
 
-        void ReloadBullet()
+        void ReloadBullet(int _pmw)
         {
             //Thread.Sleep(1000);
-            MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1000, 0, 0,
+
+            MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, _pmw, 0, 0,
             0, 0, 0);
+
+
         }
 
         void checkBulletBalance()
@@ -539,7 +542,7 @@ namespace MissionPlanner
             if (isLeftOn)
             {
                 isLeftOn = false;
-                ReloadBullet();
+                ReloadBullet(1000);
             }
             
         }
@@ -549,7 +552,7 @@ namespace MissionPlanner
             if (isRightOn)
             {
                 isRightOn = false;
-                ReloadBullet();
+                ReloadBullet(1050);
             }
             
         }
