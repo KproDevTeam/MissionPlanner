@@ -42,14 +42,52 @@ namespace MissionPlanner
             */
         }
 
-        void ReloadBullet(int _pmw)
+        void ReloadBullet(int _pwm)
         {
-            //Thread.Sleep(1000);
+            if ( 1000 == _pwm) // relaod left side
+            {
+                leftOne.Text = "1";
+                isLeft_1_Fired = false;
 
-            MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, _pmw, 0, 0,
+                leftTwo.Text = "2";
+                isLeft_2_Fired = false;
+
+                leftThree.Text = "3";
+                isLeft_3_Fired = false;
+
+                leftFour.Text = "4";
+                isLeft_4_Fired = false;
+
+                leftFive.Text = "5";
+                isLeft_5_Fired = false;
+
+                cntLeftBullets = 5;
+                checkBulletBalance();
+            }
+
+            else if( 1050 == _pwm) // reload right side
+            {
+                rightOne.Text = "1";
+                isRight_1_Fired = false;
+
+                rightTwo.Text = "2";
+                isRight_2_Fired = false;
+
+                rightThree.Text = "3";
+                isRight_3_Fired = false;
+
+                rightFour.Text = "4";
+                isRight_4_Fired = false;
+
+                rightFive.Text = "5";
+                isRight_5_Fired = false;
+
+                cntRightBullets = 5;
+                checkBulletBalance();
+            }
+       
+            MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, _pwm, 0, 0,
             0, 0, 0);
-
-
         }
 
         void checkBulletBalance()
@@ -553,8 +591,7 @@ namespace MissionPlanner
             {
                 isRightOn = false;
                 ReloadBullet(1050);
-            }
-            
+            } 
         }
     }
 }
