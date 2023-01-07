@@ -23,7 +23,7 @@ namespace MissionPlanner
         int[] arr00110 = new int[5] { 0, 0, 1, 1, 0 };
         int[] arr00111 = new int[5] { 0, 0, 1, 1, 1 };
         int[] arr01000 = new int[5] { 0, 1, 0, 0, 0 };
-        int[] arr01001 = new int[5] { 1, 0, 0, 0, 1 };
+        int[] arr01001 = new int[5] { 0, 1, 0, 0, 1 };
         
         int[] arr01010 = new int[5] { 0, 1, 0, 1, 0 };
         int[] arr01011 = new int[5] { 0, 1, 0, 1, 1 };
@@ -56,25 +56,48 @@ namespace MissionPlanner
             return Enumerable.SequenceEqual(first, second);
         }
 
+
+        // button state 
+        // 0 : not ready
+        // 1 : ready
+        // 2 : fired
+        public static bool checkTrueBitEqulity(int[] first, int[] buttonArr)
+        {
+            for (int i=0; i<5; i++) 
+            {                            // 0,1,0,0,1
+                if ( 1 == buttonArr[i] ) // 2,1,0,0,1
+                {
+                    if ( first[i] != buttonArr[i] )
+                    {
+                        return false;
+                    }
+                }  
+            }
+            return true;
+        }
+
         int PWM = 0;
         int[] leftButtonState = new int[5] { 0, 0, 0, 0, 0 };
-        bool isLeftOn = false; // failsafe lever switch
+        int[] rightButtonState = new int[5] { 0, 0, 0, 0, 0 };
+        bool isLeftOn = false; // Last Launch Button
+        bool isRightOn = false;// Last Launch Button
+        int cntLeftBullets = 5;
+        int cntRightBullets = 5;
+
         bool isLeft_1_Fired = false;
         bool isLeft_2_Fired = false;
         bool isLeft_3_Fired = false;
         bool isLeft_4_Fired = false;
         bool isLeft_5_Fired = false;
         bool isLeft_All_Fired = false;
-        int cntLeftBullets = 5;
-
-        bool isRightOn = false;// failsafe lever switch
+        
         bool isRight_1_Fired = false;
         bool isRight_2_Fired = false;
         bool isRight_3_Fired = false;
         bool isRight_4_Fired = false;
         bool isRight_5_Fired = false;
         bool isRight_All_Fired = false;
-        int cntRightBullets = 5;
+        
 
         private const int RELEASE_SERVO_NUM = 12;
         public controlMultipleRelays()
@@ -87,73 +110,87 @@ namespace MissionPlanner
             */
         }
 
-        void checkBulletBalance()
-        {
-            if (0 == cntLeftBullets)
-            {
-                leftAll.Text = "All fired";
-                isLeft_All_Fired = true;
-            }
-            else if ( 5 == cntLeftBullets)
-            {
-                leftAll.Text = "Select All";
-                isLeft_All_Fired = false;
-            }
-
-            if (0 == cntRightBullets)
-            {
-                rightAll.Text = "All fired";
-                isRight_All_Fired = true;
-            }
-            else if (5 == cntRightBullets)
-            {
-                rightAll.Text = "Select All";
-                isRight_All_Fired = false;
-            }
-        }
-
-        void buttonStateUpdate(string _time)
+        void buttonStateUpdate(string _when)
         {   
-            // Left Button update
-            if(_time == "After Launch")
+            // Left Button update------------------------------------------------------
+            if(_when == "After Left Side Launch")
             {
                 for (int i = 0; i < 5; i++)
                 {
                     if (1 == leftButtonState[i]) // ready -> fired
                     {
-                        //cntLeftBullets--;
-                        //checkBulletBalance();
                         leftButtonState[i] = 2;
-                        if (0 == i) { leftOne.Text = "fired"; }
-                        if (1 == i) { leftTwo.Text = "fired"; }
-                        if (2 == i) { leftThree.Text = "fired"; }
-                        if (3 == i) { leftFour.Text = "fired"; }
-                        if (4 == i) { leftFive.Text = "fired"; }
+                        if (0 == i) { leftOne.Text      = "fired"; }
+                        if (1 == i) { leftTwo.Text      = "fired"; }
+                        if (2 == i) { leftThree.Text    = "fired"; }
+                        if (3 == i) { leftFour.Text     = "fired"; }
+                        if (4 == i) { leftFive.Text     = "fired"; }
+                        
+                        cntLeftBullets--;
+                        if ( 0 == cntLeftBullets)
+                        {
+                            leftAll.Text = "All fired";
+                        }                      
                     }
                 }
                 return;
             }
 
-            else if (_time == "After Reset")
+            else if( (_when == "After Left Side Reset") && ( 0 == cntLeftBullets ) )
             {
                 for (int i = 0; i < 5; i++)
                 {
-                    if (2 == leftButtonState[i]) // fired -> 1,2,3,4,5
+                    leftButtonState[i] = 0;
+                }
+                leftOne.Text    = "1";
+                leftTwo.Text    = "2";
+                leftThree.Text  = "3";
+                leftFour.Text   = "4";
+                leftFive.Text   = "5";
+                leftAll.Text    = "Select All";
+                cntLeftBullets  = 5;
+                return;
+            }
+            
+            //  Rigth Button Update---------------------------------------------------
+            else if (_when == "After Right Side Launch")
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    if (1 == rightButtonState[i]) // ready -> fired
                     {
-                        leftButtonState[i] = 0;
-                        if (0 == i) { leftOne.Text = "1"; }
-                        if (1 == i) { leftTwo.Text = "2"; }
-                        if (2 == i) { leftThree.Text = "3"; }
-                        if (3 == i) { leftFour.Text = "4"; }
-                        if (4 == i) { leftFive.Text = "5"; }
+                        rightButtonState[i] = 2;
+                        if (0 == i) { rightOne.Text = "fired"; }
+                        if (1 == i) { rightTwo.Text = "fired"; }
+                        if (2 == i) { rightThree.Text = "fired"; }
+                        if (3 == i) { rightFour.Text = "fired"; }
+                        if (4 == i) { rightFive.Text = "fired"; }
+
+                        cntRightBullets--;
+                        if (0 == cntRightBullets)
+                        {
+                            rightAll.Text = "All fired";
+                        }
                     }
-                    
                 }
                 return;
             }
-         
-            //  Rigth Button Update
-            
+
+            else if ( (_when == "After Right Side Reset") && ( 0 == cntRightBullets) )
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    rightButtonState[i] = 0;
+                }
+                rightOne.Text   = "1";
+                rightTwo.Text   = "2";
+                rightThree.Text = "3";
+                rightFour.Text  = "4";
+                rightFive.Text  = "5";
+                rightAll.Text = "Select All";
+                cntRightBullets = 5;
+                return;
+            }
         }
 
         void sendPWMtoFC(int _pwm)
@@ -183,47 +220,25 @@ namespace MissionPlanner
         }
 
         // TODO: change the button color 
-        //--------------------- Left Side (push rock switch) ------------------------
+        //--------------------- Left Side  ------------------------
+        // push return switch
         private void leftAll_Click(object sender, EventArgs e)
         {
-            if ( isLeftOn ) // fail safe lever switch
+            for (int i = 0; i < 5; i++)
             {
-                try
-                {
-                    if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1100, 0, 0,
-                        0, 0, 0))
-                    {
-                        // TODO: change the button color
-                        leftOne.Text = "fired";
-                        isLeft_1_Fired = true;
-
-                        leftTwo.Text = "fired";
-                        isLeft_2_Fired = true;
-
-                        leftThree.Text = "fired";
-                        isLeft_3_Fired = true;
-
-                        leftFour.Text = "fired";
-                        isLeft_4_Fired = true;
-
-                        leftFive.Text = "fired";
-                        isLeft_5_Fired = true;
-
-                        cntLeftBullets = 0;
-                        checkBulletBalance();
-                    }
-                    else
-                    {
-                        CustomMessageBox.Show(Strings.CommandFailed, Strings.ERROR);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    CustomMessageBox.Show(Strings.CommandFailed + ex.ToString(), Strings.ERROR);
+                if (0 == leftButtonState[i]) //button number -> ready
+                {    
+                    leftButtonState[i] = 1;
+                    if (0 == i) { leftOne.Text = "Ready"; }
+                    if (1 == i) { leftTwo.Text = "Ready"; }
+                    if (2 == i) { leftThree.Text = "Ready"; }
+                    if (3 == i) { leftFour.Text = "Ready"; }
+                    if (4 == i) { leftFive.Text = "Ready"; }
                 }
             }
         }
 
+        // push lock switch (button 1~5)
         private void leftOne_Click(object sender, EventArgs e)
         {
             if (0==leftButtonState[0]) // button is not pushed yet
@@ -309,7 +324,7 @@ namespace MissionPlanner
             if (0 == leftButtonState[4]) // button is not pushed yet
             {
                 // button pushed and locked
-                //ready to fire
+                // ready to fire
                 leftButtonState[4] = 1;
                 leftFive.Text = "Ready";
                 return;
@@ -324,312 +339,219 @@ namespace MissionPlanner
             }
         }
 
-        //----------------------- Right Side ----------------------
-        private void rightAll_Click(object sender, EventArgs e)
-        {
-            if ( isRightOn ) // fail safe lever switch
-            {
-                try
-                {
-                    if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1550, 0, 0,
-                        0, 0, 0))
-                    {
-
-                        // TODO: change the button color
-                        rightOne.Text = "fired";
-                        isRight_1_Fired = true;
-
-                        rightTwo.Text = "fired";
-                        isRight_2_Fired = true;
-
-                        rightThree.Text = "fired";
-                        isRight_3_Fired = true;
-
-                        rightFour.Text = "fired";
-                        isRight_4_Fired = true;
-
-                        rightFive.Text = "fired";
-                        isRight_5_Fired = true;
-
-                        cntRightBullets = 0;
-                        checkBulletBalance();
-                    }
-                    else
-                    {
-                        CustomMessageBox.Show(Strings.CommandFailed, Strings.ERROR);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    CustomMessageBox.Show(Strings.CommandFailed + ex.ToString(), Strings.ERROR);
-                }
-            }
-        }
-
-        private void rightOne_Click(object sender, EventArgs e)
-        {
-            if (isRight_1_Fired) // reload manually
-            {
-                rightOne.Text = "1";
-                isRight_1_Fired = false;
-                cntRightBullets++;
-                checkBulletBalance();
-                // color chnage to green
-                return;
-            }
-
-            if ( !isRight_1_Fired && isRightOn) // Fire
-            {
-                try
-                {
-                    if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1625, 0, 0,
-                        0, 0, 0))
-                    {
-                        rightOne.Text = "fired";
-                        isRight_1_Fired = true;
-                        cntRightBullets--;
-                        checkBulletBalance();
-                    }
-                    else
-                    {
-                        CustomMessageBox.Show(Strings.CommandFailed, Strings.ERROR);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    CustomMessageBox.Show(Strings.CommandFailed + ex.ToString(), Strings.ERROR);
-                }
-            }
-        }
-
-        private void rightTwo_Click(object sender, EventArgs e)
-        {
-            if (isRight_2_Fired) // reload manually
-            {
-                rightTwo.Text = "2";
-                isRight_2_Fired = false;
-                cntRightBullets++;
-                checkBulletBalance();
-                // color chnage to green
-                return;
-            }
-
-            if ( !isRight_2_Fired && isRightOn) // fail safe lever switch
-            {
-                try
-                {
-                    if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1700, 0, 0,
-                        0, 0, 0))
-                    {
-                        rightTwo.Text = "fired";
-                        isRight_2_Fired = true;
-                        cntRightBullets--;
-                        checkBulletBalance();
-                    }
-                    else
-                    {
-                        CustomMessageBox.Show(Strings.CommandFailed, Strings.ERROR);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    CustomMessageBox.Show(Strings.CommandFailed + ex.ToString(), Strings.ERROR);
-                }
-            }
-        }
-
-        private void rightThree_Click(object sender, EventArgs e)
-        {
-            if (isRight_3_Fired) // reload manually
-            {
-                rightThree.Text = "3";
-                isRight_3_Fired = false;
-                cntRightBullets++;
-                checkBulletBalance();
-                // color chnage to green
-                return;
-            }
-
-            if ( !isRight_3_Fired && isRightOn) // Fire
-            {
-                try
-                {
-                    if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1775, 0, 0,
-                        0, 0, 0))
-                    {
-                        rightThree.Text = "fired";
-                        isRight_3_Fired = true;
-                        cntRightBullets--;
-                        checkBulletBalance();
-                    }
-                    else
-                    {
-                        CustomMessageBox.Show(Strings.CommandFailed, Strings.ERROR);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    CustomMessageBox.Show(Strings.CommandFailed + ex.ToString(), Strings.ERROR);
-                }
-            }
-        }
-
-        private void rightFour_Click(object sender, EventArgs e)
-        {
-            if (isRight_4_Fired) // reload manually
-            {
-                rightFour.Text = "4";
-                isRight_4_Fired = false;
-                cntRightBullets++;
-                checkBulletBalance();
-                // color chnage to green
-                return;
-            }
-            if (!isRight_4_Fired && isRightOn) // fail safe lever switch
-            {
-                try
-                {
-                    if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1850, 0, 0,
-                        0, 0, 0))
-                    {
-                        rightFour.Text = "fired";
-                        isRight_4_Fired = true;
-                        cntRightBullets--;
-                        checkBulletBalance();
-                    }
-                    else
-                    {
-                        CustomMessageBox.Show(Strings.CommandFailed, Strings.ERROR);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    CustomMessageBox.Show(Strings.CommandFailed + ex.ToString(), Strings.ERROR);
-                }
-            }
-        }
-
-        private void rightFive_Click(object sender, EventArgs e)
-        {
-            if (isRight_5_Fired) // reload manually
-            {
-                rightFive.Text = "5";
-                isRight_5_Fired = false;
-                cntRightBullets++;
-                checkBulletBalance();
-                // color chnage to green
-                return;
-            }
-
-            if (!isRight_5_Fired && isRightOn)// fail safe lever switch
-            {
-                try
-                {
-                    if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1925, 0, 0,
-                        0, 0, 0))
-                    {
-                        rightFive.Text = "fired";
-                        isRight_5_Fired = true;
-                        cntRightBullets--;
-                        checkBulletBalance();
-                    }
-                    else
-                    {
-                        CustomMessageBox.Show(Strings.CommandFailed, Strings.ERROR);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    CustomMessageBox.Show(Strings.CommandFailed + ex.ToString(), Strings.ERROR);
-                }
-            }
-        }
-
-        // Left Side Final launch Button
-        // Luanch all ready to fire bullets
+        // Final launch Button
+        // Luanch all ready to fire bullets at once
+        // toggle switch ( On or Off )
         private void leftOn_CheckedChanged(object sender, EventArgs e)
         {
-            if (!isLeftOn) 
+            if (!isLeftOn)
             {
                 isLeftOn = true;
+   
+                if (checkTrueBitEqulity(arr00000, leftButtonState)) PWM = 1000;
+                else if (checkTrueBitEqulity(arr00001, leftButtonState)) PWM = 1015;
+                else if (checkTrueBitEqulity(arr00010, leftButtonState)) PWM = 1030;
+                else if (checkTrueBitEqulity(arr00011, leftButtonState)) PWM = 1045;
+                else if (checkTrueBitEqulity(arr00100, leftButtonState)) PWM = 1060;
+                else if (checkTrueBitEqulity(arr00101, leftButtonState)) PWM = 1075;
+                else if (checkTrueBitEqulity(arr00110, leftButtonState)) PWM = 1090;
+                else if (checkTrueBitEqulity(arr00111, leftButtonState)) PWM = 1105;
+                else if (checkTrueBitEqulity(arr01000, leftButtonState)) PWM = 1120;
+                else if (checkTrueBitEqulity(arr01001, leftButtonState)) PWM = 1135;
+                
+                else if (checkTrueBitEqulity(arr01010, leftButtonState)) PWM = 1150;
+                else if (checkTrueBitEqulity(arr01011, leftButtonState)) PWM = 1165;
+                else if (checkTrueBitEqulity(arr01100, leftButtonState)) PWM = 1180;
+                else if (checkTrueBitEqulity(arr01101, leftButtonState)) PWM = 1195;
+                else if (checkTrueBitEqulity(arr01110, leftButtonState)) PWM = 1210;
+                else if (checkTrueBitEqulity(arr01111, leftButtonState)) PWM = 1225;
+                else if (checkTrueBitEqulity(arr10000, leftButtonState)) PWM = 1240;
+                else if (checkTrueBitEqulity(arr10001, leftButtonState)) PWM = 1255;
+                else if (checkTrueBitEqulity(arr10010, leftButtonState)) PWM = 1270;
+                else if (checkTrueBitEqulity(arr10011, leftButtonState)) PWM = 1285;
 
-                if      (checkEquality(arr00000, leftButtonState)) PWM = 1000;
-                else if (checkEquality(arr00001, leftButtonState)) PWM = 1015;
-                else if (checkEquality(arr00010, leftButtonState)) PWM = 1030;
-                else if (checkEquality(arr00011, leftButtonState)) PWM = 1045;
-                else if (checkEquality(arr00100, leftButtonState)) PWM = 1060;
-                else if (checkEquality(arr00101, leftButtonState)) PWM = 1075;
-                else if (checkEquality(arr00110, leftButtonState)) PWM = 1090;
-                else if (checkEquality(arr00111, leftButtonState)) PWM = 1105;
-                else if (checkEquality(arr01000, leftButtonState)) PWM = 1120;
-                else if (checkEquality(arr01001, leftButtonState)) PWM = 1135;
+                else if (checkTrueBitEqulity(arr10100, leftButtonState)) PWM = 1300;
+                else if (checkTrueBitEqulity(arr10101, leftButtonState)) PWM = 1315;
+                else if (checkTrueBitEqulity(arr10110, leftButtonState)) PWM = 1330;
+                else if (checkTrueBitEqulity(arr10111, leftButtonState)) PWM = 1345;
+                else if (checkTrueBitEqulity(arr11000, leftButtonState)) PWM = 1360;
+                else if (checkTrueBitEqulity(arr11001, leftButtonState)) PWM = 1375;
+                else if (checkTrueBitEqulity(arr11010, leftButtonState)) PWM = 1390;
+                else if (checkTrueBitEqulity(arr11011, leftButtonState)) PWM = 1405;
+                else if (checkTrueBitEqulity(arr11100, leftButtonState)) PWM = 1420;
+                else if (checkTrueBitEqulity(arr11101, leftButtonState)) PWM = 1435;
 
-                else if (checkEquality(arr01010, leftButtonState)) PWM = 1150;
-                else if (checkEquality(arr01011, leftButtonState)) PWM = 1165;
-                else if (checkEquality(arr01100, leftButtonState)) PWM = 1180;
-                else if (checkEquality(arr01101, leftButtonState)) PWM = 1195;
-                else if (checkEquality(arr01110, leftButtonState)) PWM = 1210;
-                else if (checkEquality(arr01111, leftButtonState)) PWM = 1225;
-                else if (checkEquality(arr10000, leftButtonState)) PWM = 1240;
-                else if (checkEquality(arr10001, leftButtonState)) PWM = 1255;
-                else if (checkEquality(arr10010, leftButtonState)) PWM = 1270;
-                else if (checkEquality(arr10011, leftButtonState)) PWM = 1285;
-
-                else if (checkEquality(arr10100, leftButtonState)) PWM = 1300;
-                else if (checkEquality(arr10101, leftButtonState)) PWM = 1315;
-                else if (checkEquality(arr10110, leftButtonState)) PWM = 1330;
-                else if (checkEquality(arr10111, leftButtonState)) PWM = 1345;
-                else if (checkEquality(arr11000, leftButtonState)) PWM = 1360;
-                else if (checkEquality(arr11001, leftButtonState)) PWM = 1375;
-                else if (checkEquality(arr11010, leftButtonState)) PWM = 1390;
-                else if (checkEquality(arr11011, leftButtonState)) PWM = 1405;
-                else if (checkEquality(arr11100, leftButtonState)) PWM = 1420;
-                else if (checkEquality(arr11101, leftButtonState) ) PWM = 1435;
-
-                else if (checkEquality(arr11110, leftButtonState)) PWM = 1450;
-                else if (checkEquality(arr11111, leftButtonState)) PWM = 1465;
+                else if (checkTrueBitEqulity(arr11110, leftButtonState)) PWM = 1450;
+                else if (checkTrueBitEqulity(arr11111, leftButtonState)) PWM = 1465;
 
                 sendPWMtoFC(PWM);
 
-                buttonStateUpdate("After Launch");
+                buttonStateUpdate("After Left Side Launch");
             }
         }
 
-        private void rightOn_CheckedChanged(object sender, EventArgs e)
-        {
-            isRightOn= true;
-        }
-
-
-        //  Reset ------------------------------------------------------------------
+        // Reset after launch
         private void leftOff_CheckedChanged(object sender, EventArgs e)
         {
             if (isLeftOn)
             {
                 isLeftOn = false;
-                cntLeftBullets = 5;
-                checkBulletBalance();
-
                 sendPWMtoFC(1000);
-                buttonStateUpdate("After Reset");
-                //ToDo: Disable all left side fire button(ex: buton color change to gray..)
+                buttonStateUpdate("After Left Side Reset");
             }
-            
         }
 
+
+        //----------------------- Right Side ---------------------
+        // push return switch
+        private void rightAll_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                if (0 == rightButtonState[i]) //button number -> ready
+                {
+                    rightButtonState[i] = 1;
+                    if (0 == i) { rightOne.Text = "Ready"; }
+                    if (1 == i) { rightTwo.Text = "Ready"; }
+                    if (2 == i) { rightThree.Text = "Ready"; }
+                    if (3 == i) { rightFour.Text = "Ready"; }
+                    if (4 == i) { rightFive.Text = "Ready"; }
+                }
+            }
+        }
+
+        // push lock switch (button 1~5)
+        private void rightOne_Click(object sender, EventArgs e)
+        {
+            if (0 == rightButtonState[0]) // button is not pushed yet
+            {
+                rightButtonState[0] = 1;
+                rightOne.Text = "Ready";
+            }
+            else if (1 == rightButtonState[0]) // button is pushed already
+            {
+                rightButtonState[0] = 0;
+                rightOne.Text = "1";
+            }
+        }
+
+        private void rightTwo_Click(object sender, EventArgs e)
+        {
+            if (0 == rightButtonState[1]) // button is not pushed yet
+            {
+                rightButtonState[1] = 1;
+                rightTwo.Text = "Ready";
+            }
+            else if (1 == rightButtonState[1]) // button is pushed already
+            {
+                rightButtonState[1] = 0;
+                rightTwo.Text = "2";
+            }
+        }
+
+        private void rightThree_Click(object sender, EventArgs e)
+        {
+            if (0 == rightButtonState[2]) // button is not pushed yet
+            {
+                rightButtonState[2] = 1;
+                rightThree.Text = "Ready";
+            }
+            else if (1 == rightButtonState[2]) // button is pushed already
+            {
+                rightButtonState[2] = 0;
+                rightThree.Text = "3";
+            }
+        }
+
+        private void rightFour_Click(object sender, EventArgs e)
+        {
+            if (0 == rightButtonState[3]) // button is not pushed yet
+            {
+                rightButtonState[3] = 1;
+                rightFour.Text = "Ready";
+            }
+            else if (1 == rightButtonState[3]) // button is pushed already
+            {
+                rightButtonState[3] = 0;
+                rightFour.Text = "4";
+            }
+        }
+
+        private void rightFive_Click(object sender, EventArgs e)
+        {
+            if (0 == rightButtonState[4]) // button is not pushed yet
+            {
+                rightButtonState[4] = 1;
+                rightFive.Text = "Ready";
+            }
+            else if (1 == rightButtonState[4]) // button is pushed already
+            {
+                rightButtonState[4] = 0;
+                rightFive.Text = "5";
+            }
+        }
+
+
+        // Final launch Button
+        // Luanch all ready to fire bullets at once
+        // toggle switch (On or Off)
+        private void rightOn_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!isRightOn)
+            {
+                isRightOn = true;
+
+                if (checkEquality(arr00000, rightButtonState)) PWM = 1000 + 500;
+                else if (checkTrueBitEqulity(arr00001, rightButtonState)) PWM = 1515;//
+                else if (checkTrueBitEqulity(arr00010, rightButtonState)) PWM = 1530;//
+                else if (checkTrueBitEqulity(arr00011, rightButtonState)) PWM = 1545;//
+                else if (checkTrueBitEqulity(arr00100, rightButtonState)) PWM = 1560;//
+                else if (checkTrueBitEqulity(arr00101, rightButtonState)) PWM = 1575;//
+                else if (checkTrueBitEqulity(arr00110, rightButtonState)) PWM = 1590;//
+                else if (checkTrueBitEqulity(arr00111, rightButtonState)) PWM = 1605;//
+                else if (checkTrueBitEqulity(arr01000, rightButtonState)) PWM = 1620;//
+                else if (checkTrueBitEqulity(arr01001, rightButtonState)) PWM = 1635;
+
+                else if (checkTrueBitEqulity(arr01010, rightButtonState)) PWM = 1650;
+                else if (checkTrueBitEqulity(arr01011, rightButtonState)) PWM = 1665;
+                else if (checkTrueBitEqulity(arr01100, rightButtonState)) PWM = 1680;
+                else if (checkTrueBitEqulity(arr01101, rightButtonState)) PWM = 1695;
+                else if (checkTrueBitEqulity(arr01110, rightButtonState)) PWM = 1710;
+                else if (checkTrueBitEqulity(arr01111, rightButtonState)) PWM = 1725;
+                else if (checkTrueBitEqulity(arr10000, rightButtonState)) PWM = 1740;
+                else if (checkTrueBitEqulity(arr10001, rightButtonState)) PWM = 1755;
+                else if (checkTrueBitEqulity(arr10010, rightButtonState)) PWM = 1770;
+                else if (checkTrueBitEqulity(arr10011, rightButtonState)) PWM = 1785;
+
+                else if (checkTrueBitEqulity(arr10100, rightButtonState)) PWM = 1800;
+                else if (checkTrueBitEqulity(arr10101, rightButtonState)) PWM = 1815;
+                else if (checkTrueBitEqulity(arr10110, rightButtonState)) PWM = 1830;//
+                else if (checkTrueBitEqulity(arr10111, rightButtonState)) PWM = 1845;//
+                else if (checkTrueBitEqulity(arr11000, rightButtonState)) PWM = 1860;//
+                else if (checkTrueBitEqulity(arr11001, rightButtonState)) PWM = 1875;//
+                else if (checkTrueBitEqulity(arr11010, rightButtonState)) PWM = 1890;//
+                else if (checkTrueBitEqulity(arr11011, rightButtonState)) PWM = 1905;//
+                else if (checkTrueBitEqulity(arr11100, rightButtonState)) PWM = 1920;//
+                else if (checkTrueBitEqulity(arr11101, rightButtonState)) PWM = 1935;//
+
+                else if (checkTrueBitEqulity(arr11110, rightButtonState)) PWM = 1950;//
+                else if (checkTrueBitEqulity(arr11111, rightButtonState)) PWM = 1965;//
+                else PWM = 0;
+
+                sendPWMtoFC(PWM);
+
+                buttonStateUpdate("After Right Side Launch");
+            }
+        }
+
+        // Reset after launch
         private void rightOff_CheckedChanged(object sender, EventArgs e)
         {
             if (isRightOn)
             {
                 isRightOn = false;
-                cntRightBullets = 5;
-                checkBulletBalance();
-
                 sendPWMtoFC(1500);
-                buttonStateUpdate("After Reset");
-
-
-                //ToDo: Disable all right side fire button(ex: buton color change to gray..)
+                buttonStateUpdate("After Right Side Reset");
             }
         }
     }
