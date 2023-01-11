@@ -501,7 +501,7 @@ namespace MissionPlanner
             {
                 isRightOn = true;
 
-                if (checkEquality(arr00000, rightButtonState)) PWM = 1000 + 500;
+                if (checkTrueBitEqulity(arr00000, rightButtonState)) PWM = 1500;
                 else if (checkTrueBitEqulity(arr00001, rightButtonState)) PWM = 1515;//
                 else if (checkTrueBitEqulity(arr00010, rightButtonState)) PWM = 1530;//
                 else if (checkTrueBitEqulity(arr00011, rightButtonState)) PWM = 1545;//
@@ -536,7 +536,7 @@ namespace MissionPlanner
 
                 else if (checkTrueBitEqulity(arr11110, rightButtonState)) PWM = 1950;//
                 else if (checkTrueBitEqulity(arr11111, rightButtonState)) PWM = 1965;//
-                else PWM = 0;
+               // else PWM = 0;
 
                 sendPWMtoFC(PWM);
 
@@ -553,6 +553,21 @@ namespace MissionPlanner
                 sendPWMtoFC(1500);
                 buttonStateUpdate("After Right Side Reset");
             }
+        }
+
+        private void groupBox2_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
