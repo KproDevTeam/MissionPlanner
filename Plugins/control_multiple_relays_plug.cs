@@ -42,6 +42,8 @@ namespace PersistentSimpleActions
 			MainV2.instance.FlightData.panel_persistent.Controls.Add(but_release1);
 
             objSecondWindow = new controlMultipleRelays();
+ //           objSecondWindow.Show();
+ //           isSecondWindowHide = false;
 
             return true;
 		}
