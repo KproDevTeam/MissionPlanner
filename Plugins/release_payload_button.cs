@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Windows.Forms;
 using MissionPlanner;
 using MissionPlanner.Plugin;
@@ -55,15 +56,8 @@ namespace PersistentSimpleActions
 
 		private void but1_release_Click(object sender, EventArgs e)
 		{
-            String confirmMessage;
-            if (isReleased){
-                confirmMessage = "하물을 고정 하겠습니까? \n Are you sure you want to grab the payload??";
-            }
-            else{
-                confirmMessage = "하물을 투하 하겠습니까? \n Are you sure you want to release the payload??"; 
-            }
-
-            var confirmResult = MessageBox.Show(confirmMessage, "Confirm Release!!", MessageBoxButtons.YesNo);
+            var confirmResult = MessageBox.Show("하물을 투하 하겠습니까? \n Are you sure you want to release the payload??",
+                "Confirm Release!!", MessageBoxButtons.YesNo);
 
             if (confirmResult != DialogResult.Yes)
 			{
@@ -72,27 +66,14 @@ namespace PersistentSimpleActions
             }
 			try
 			{
-                // Button Toggle
-				if(isReleased) // already released
-                { 
-                    pwmValue = 1100; // send grab signal
-                    isReleased = false;
-                    but_release1.Text = "하물 투하---- \n (Release Payload)";
-                }
-                else // not relesed
-                {
-                    pwmValue = 1900; // send release signal 
-                    isReleased = true;
-                    but_release1.Text = "하물 고정--- \n (Grab Payload)";
-                }
-
-                // send release or grab signal
-                if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, pwmValue, 0, 0,
+                // send release signal
+                if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1900, 0, 0,
 					0, 0, 0))
 				{
-                    //RELEASE_STATUS = true;
-                    // Do nothing.
-                    // TODO: change the button color or give some indication of success on the UI
+                    Thread.Sleep(3000);
+                    // send grab signal
+                    MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1100, 0, 0,
+                    0, 0, 0);
                 }
 				else
 				{
