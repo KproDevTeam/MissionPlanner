@@ -34,7 +34,7 @@ namespace PersistentSimpleActions
 			but_release1 = new MyButton();
 			ToolTip toolTip1 = new ToolTip();
 
-            but_release1.Text = "하물 투하 \n (Release Payload)";
+            but_release1.Text = "화물 투하 \n (Release Payload)";
 			but_release1.Location = new System.Drawing.Point(4, 4);
 			but_release1.Size = new System.Drawing.Size(150, 30);
 			toolTip1.SetToolTip(but_release1, "Releases Payload, requires confirmation");
@@ -56,7 +56,7 @@ namespace PersistentSimpleActions
 
 		private void but1_release_Click(object sender, EventArgs e)
 		{
-            var confirmResult = MessageBox.Show("하물을 투하 하겠습니까? \n Are you sure you want to release the payload??",
+            var confirmResult = MessageBox.Show("화물을 투하 하겠습니까? \n Are you sure you want to drop the cargo?",
                 "Confirm Release!!", MessageBoxButtons.YesNo);
 
             if (confirmResult != DialogResult.Yes)
