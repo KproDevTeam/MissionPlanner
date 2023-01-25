@@ -70,7 +70,7 @@ namespace PersistentSimpleActions
                 if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1900, 0, 0,
 					0, 0, 0))
 				{
-                    Thread.Sleep(3000);
+                    Thread.Sleep(500);
                     // send grab signal
                     MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, 1100, 0, 0,
                     0, 0, 0);
