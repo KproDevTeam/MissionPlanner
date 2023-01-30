@@ -7911,7 +7911,14 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             string place = "Perth Airport, Australia";
             if (DialogResult.OK == InputBox.Show("Location", "Enter your location", ref place))
             {
+                // Create a backup of the map provider
+                var provider = MainMap.MapProvider;
+                // Set map provider to OpenStreetMap
+                MainMap.MapProvider = GMapProviders.OpenStreetMap;
+                // Zoom to the region specified
                 GeoCoderStatusCode status = MainMap.SetPositionByKeywords(place);
+                // Restore the map provider
+                MainMap.MapProvider = provider;
                 if (status != GeoCoderStatusCode.G_GEO_SUCCESS)
                 {
                     CustomMessageBox.Show("Google Maps Geocoder can't find: '" + place + "', reason: " + status,
@@ -7952,6 +7959,13 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
         private void chk_usemavftp_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Instance["UseMissionMAVFTP"] = chk_usemavftp.Checked.ToString();
+        }
+
+        private void gDALOpacityToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var ans = GDAL.GDALProvider.Instance.opacity;
+            if (InputBox.Show("Opacity 0.0-1.0", "Enter opacity (0.0-1.0)", ref ans) == DialogResult.OK)
+                GDAL.GDALProvider.Instance.opacity = double.Parse(InputBox.value);
         }
     }
 }
