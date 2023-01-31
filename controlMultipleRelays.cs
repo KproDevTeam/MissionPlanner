@@ -130,6 +130,7 @@ namespace MissionPlanner
                         if ( 0 == cntLeftBullets)
                         {
                             leftAll.Text = "All fired";
+                            
                         }                      
                     }
                 }
@@ -200,12 +201,7 @@ namespace MissionPlanner
                 if (MainV2.comPort.doCommand((byte)MainV2.comPort.sysidcurrent, (byte)MainV2.comPort.compidcurrent, MAVLink.MAV_CMD.DO_SET_SERVO, RELEASE_SERVO_NUM, _pwm, 0, 0,
                     0, 0, 0))
                 {
-                    /*
-                    leftTwo.Text = "fired";
-                    isLeft_2_Fired = true;
-                    cntLeftBullets--;
-                    checkBulletBalance();
-                    */
+                   // Do nothing
                 }
                 else
                 {
@@ -347,7 +343,7 @@ namespace MissionPlanner
             if (!isLeftOn)
             {
                 isLeftOn = true;
-   
+
                 if (checkTrueBitEqulity(arr00000, leftButtonState)) PWM = 1000;
                 else if (checkTrueBitEqulity(arr00001, leftButtonState)) PWM = 1015;
                 else if (checkTrueBitEqulity(arr00010, leftButtonState)) PWM = 1030;
@@ -358,7 +354,7 @@ namespace MissionPlanner
                 else if (checkTrueBitEqulity(arr00111, leftButtonState)) PWM = 1105;
                 else if (checkTrueBitEqulity(arr01000, leftButtonState)) PWM = 1120;
                 else if (checkTrueBitEqulity(arr01001, leftButtonState)) PWM = 1135;
-                
+
                 else if (checkTrueBitEqulity(arr01010, leftButtonState)) PWM = 1150;
                 else if (checkTrueBitEqulity(arr01011, leftButtonState)) PWM = 1165;
                 else if (checkTrueBitEqulity(arr01100, leftButtonState)) PWM = 1180;
@@ -382,11 +378,15 @@ namespace MissionPlanner
                 else if (checkTrueBitEqulity(arr11101, leftButtonState)) PWM = 1435;
 
                 else if (checkTrueBitEqulity(arr11110, leftButtonState)) PWM = 1450;
-                else if (checkTrueBitEqulity(arr11111, leftButtonState)) PWM = 1465;
-
+                else if (checkTrueBitEqulity(arr11111, leftButtonState))
+                {
+                    PWM = 1465;
+                }
                 sendPWMtoFC(PWM);
 
                 buttonStateUpdate("After Left Side Launch");
+                Thread.Sleep(1000);
+                sendPWMtoFC(1000);
             }
         }
 
@@ -541,6 +541,8 @@ namespace MissionPlanner
                 sendPWMtoFC(PWM);
 
                 buttonStateUpdate("After Right Side Launch");
+                Thread.Sleep(1000);
+                sendPWMtoFC(1500);
             }
         }
 
